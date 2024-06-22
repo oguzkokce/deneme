@@ -1,3 +1,4 @@
+// app.js içeriği
 require("dotenv").config({ path: "./server/.env" });
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");

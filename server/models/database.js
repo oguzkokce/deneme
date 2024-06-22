@@ -1,5 +1,4 @@
 require("dotenv").config({ path: "./server/.env" });
-
 const mongoose = require("mongoose");
 
 const uri = process.env.MONGODB_URI;
@@ -21,6 +20,6 @@ db.once("open", function () {
 });
 
 // Models
-require("./models/Category");
-require("./models/Recipe");
-require("./models/User"); // User modelini ekleyin
+require("./Category");
+require("./Recipe");
+require("./user");

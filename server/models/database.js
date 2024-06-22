@@ -12,11 +12,15 @@ if (!uri) {
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
+db.on("error", (error) => {
+  console.error("connection error:", error);
+  process.exit(1); // Bağlantı hatası durumunda uygulamayı sonlandır
+});
 db.once("open", function () {
   console.log("Connected to MongoDB");
 });
 
 // Models
-require("./Category");
-require("./Recipe");
+require("./models/Category");
+require("./models/Recipe");
+require("./models/User"); // User modelini ekleyin

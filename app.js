@@ -24,9 +24,21 @@ store.on("error", function (error) {
 });
 
 // MongoDB bağlantısı
-mongoose.connect(
-  "mongodb+srv://kokceoguz:Okokce57**@cluster0.0scazco.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-);
+mongoose
+  .connect(
+    "mongodb+srv://kokceoguz:Okokce57**@cluster0.0scazco.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // MongoDB sunucusunun yanıt vermesi için 5 saniye bekler
+    }
+  )
+  .then(() => {
+    console.log("MongoDB bağlantısı başarılı");
+  })
+  .catch((error) => {
+    console.error("MongoDB bağlantı hatası:", error);
+  });
 
 // Middleware
 app.use(methodOverride("_method"));

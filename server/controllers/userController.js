@@ -9,7 +9,7 @@ exports.login = (req, res) => {
       return res.redirect("/users/login");
     }
     req.session.user = user;
-    res.redirect("/users/profile");
+    res.redirect("/");
   });
 };
 
@@ -22,7 +22,7 @@ exports.register = (req, res) => {
       return res.redirect("/users/register");
     }
     req.session.user = newUser;
-    res.redirect("/users/profile");
+    res.redirect("/");
   });
 };
 

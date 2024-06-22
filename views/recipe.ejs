@@ -3,6 +3,7 @@
   <head>
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   </head>
   <body>
     <div class="container">
@@ -48,7 +49,46 @@
               <% }) %>
             </ul>
           </div>
+          <!-- Puanlama -->
+          <% if (user) { %>
+          <form action="/rate/<%= recipe._id %>" method="POST">
+            <label for="rating">Puan Ver:</label>
+            <select name="rating" id="rating" required>
+              <option value="">Seçiniz</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Puanla</button>
+          </form>
+          <% } else { %>
+          <p>
+            Puan vermek için lütfen
+            <a href="/users/login">giriş yapın</a>.
+          </p>
+          <% } %>
 
+          <div id="averageRating">Ortalama Puan: Yükleniyor...</div>
+
+          <script>
+            $(document).ready(function () {
+              $.ajax({
+                url: "/average-rating/<%= recipe._id %>",
+                method: "GET",
+                success: function (data) {
+                  $("#averageRating").text(
+                    "Ortalama Puan: " + data.averageRating
+                  );
+                },
+                error: function (err) {
+                  console.log(err);
+                  $("#averageRating").text("Ortalama Puan: Hesaplanamadı");
+                },
+              });
+            });
+          </script>
           <!-- Favorilere Ekleme -->
           <% if (user) { %>
           <form action="/users/favorite/<%= recipe._id %>" method="POST">

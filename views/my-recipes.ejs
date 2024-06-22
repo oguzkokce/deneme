@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/my-recipes.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Tariflerim</h1>
+      <% if (success_msg) { %>
+      <div class=""><%= success_msg %></div>
+      <% } %> <% if (error_msg) { %>
+      <div class=""><%= error_msg %></div>
+      <% } %>
+      <ul>
+        <% recipes.forEach(function(recipe) { %>
+        <li>
+          <strong><%= recipe.name %></strong>
+          <form
+            action="/update/<%= recipe._id %>?_method=PUT"
+            method="POST"
+            style="display: inline"
+          >
+            <input
+              type="text"
+              name="name"
+              value="<%= recipe.name %>"
+              required
+            />
+            <textarea name="ingredients" required>
+<%= recipe.ingredients %></textarea
+            >
+            <textarea name="description" required>
+<%= recipe.description %></textarea
+            >
+            <input type="hidden" name="_method" value="PUT" />
+            <button type="submit">Güncelle</button>
+          </form>
+          <form
+            action="/delete/<%= recipe._id %>?_method=DELETE"
+            method="POST"
+            style="display: inline"
+          >
+            <input type="hidden" name="_method" value="DELETE" />
+            <button type="submit" class="delete">Sil</button>
+          </form>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
+  </body>
+</html>

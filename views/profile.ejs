@@ -9,6 +9,8 @@
       <h1>Profil Sayfası</h1>
       <% if (success_msg) { %>
       <div class=""><%= success_msg %></div>
+      <% } %> <% if (error_msg) { %>
+      <div class=""><%= error_msg %></div>
       <% } %>
       <form action="/users/profile/update" method="POST">
         <div>
@@ -36,43 +38,6 @@
       <form action="/users/profile/delete" method="POST">
         <button type="submit" class="delete">Hesabı Sil</button>
       </form>
-
-      <h2>Tariflerim</h2>
-      <ul>
-        <% user.recipes.forEach(function(recipe) { %>
-        <li>
-          <strong><%= recipe.name %></strong>
-          <form
-            action="/recipes/update/<%= recipe._id %>"
-            method="POST"
-            style="display: inline"
-          >
-            <input type="hidden" name="_method" value="PUT" />
-            <input
-              type="text"
-              name="name"
-              value="<%= recipe.name %>"
-              required
-            />
-            <textarea name="ingredients" required>
-<%= recipe.ingredients %></textarea
-            >
-            <textarea name="description" required>
-<%= recipe.description %></textarea
-            >
-            <button type="submit">Güncelle</button>
-          </form>
-          <form
-            action="/recipes/delete/<%= recipe._id %>"
-            method="POST"
-            style="display: inline"
-          >
-            <input type="hidden" name="_method" value="DELETE" />
-            <button type="submit" class="delete">Sil</button>
-          </form>
-        </li>
-        <% }) %>
-      </ul>
 
       <h2>Favori Tariflerim</h2>
       <a href="/users/favs" class="btn btn-primary">Favori Tariflerim</a>

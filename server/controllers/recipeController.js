@@ -215,7 +215,7 @@ exports.updateRecipe = async (req, res) => {
       description,
     });
     req.flash("success_msg", "Tarif güncellendi.");
-    res.redirect("/users/profile");
+    res.redirect("/my-recipes");
   } catch (error) {
     res.status(500).send("Bir hata oluştu.");
   }
@@ -226,8 +226,68 @@ exports.deleteRecipe = async (req, res) => {
     const recipeId = req.params.id;
     await Recipe.findByIdAndDelete(recipeId);
     req.flash("success_msg", "Tarif silindi.");
-    res.redirect("/users/profile");
+    res.redirect("/my-recipes");
   } catch (error) {
     res.status(500).send("Bir hata oluştu.");
+  }
+};
+
+exports.rateRecipe = async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const recipeId = req.params.id;
+    const { rating } = req.body;
+
+    if (!rating || rating < 1 || rating > 5) {
+      req.flash("error_msg", "Geçerli bir puan giriniz (1-5 arası).");
+      return res.redirect(`/recipe/${recipeId}`);
+    }
+
+    const recipe = await Recipe.findById(recipeId);
+
+    const existingRating = recipe.ratings.find(
+      (r) => r.userId.toString() === userId.toString()
+    );
+
+    if (existingRating) {
+      existingRating.rating = rating;
+    } else {
+      recipe.ratings.push({ userId, rating });
+    }
+
+    await recipe.save();
+
+    req.flash("success_msg", "Tarife puan verdiniz.");
+    res.redirect(`/recipe/${recipeId}`);
+  } catch (err) {
+    console.error(err);
+    req.flash("error_msg", "Bir hata oluştu. Lütfen tekrar deneyin.");
+    res.redirect("back");
+  }
+};
+
+exports.getRecipeAverageRating = async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    const ratings = recipe.ratings;
+    const total = ratings.reduce((acc, curr) => acc + curr.rating, 0);
+    const averageRating = ratings.length
+      ? (total / ratings.length).toFixed(1)
+      : 0;
+
+    res.send({ averageRating });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Bir hata oluştu");
+  }
+};
+
+exports.getMyRecipes = async (req, res) => {
+  try {
+    const recipes = await Recipe.find({ email: req.session.user.email }).lean();
+    res.render("my-recipes", { title: "Tariflerim", recipes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Bir hata oluştu");
   }
 };

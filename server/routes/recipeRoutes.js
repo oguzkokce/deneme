@@ -10,15 +10,11 @@ router.get("/categories/:id", recipeController.exploreCategoriesById);
 router.post("/search", recipeController.searchRecipe);
 router.get("/explore-latest", recipeController.exploreLatest);
 router.get("/explore-random", recipeController.exploreRandom);
-
-router.get("/submit-recipe", ensureAuthenticated, (req, res) => {
-  res.render("submit-recipe", {
-    title: "Submit Recipe",
-    infoSubmitObj: req.flash("infoSubmitObj"),
-    infoErrorsObj: req.flash("infoErrorsObj"),
-  });
-});
-
+router.get(
+  "/submit-recipe",
+  ensureAuthenticated,
+  recipeController.submitRecipe
+);
 router.post(
   "/submit-recipe",
   ensureAuthenticated,
@@ -46,5 +42,11 @@ router.delete(
   },
   recipeController.deleteRecipe
 );
+
+router.post("/rate/:id", ensureAuthenticated, recipeController.rateRecipe);
+
+router.get("/average-rating/:id", recipeController.getRecipeAverageRating);
+
+router.get("/my-recipes", ensureAuthenticated, recipeController.getMyRecipes);
 
 module.exports = router;

@@ -7,9 +7,15 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
+const MongoDBStore = require("connect-mongodb-session")(session);
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+const store = new MongoDBStore({
+  uri: "mongodb+srv://kokceoguz:Okokce57**@cluster0.0scazco.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+  collection: "sessions",
+});
 
 // Middleware
 app.use(methodOverride("_method"));

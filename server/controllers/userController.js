@@ -33,13 +33,15 @@ exports.logout = (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.session.user._id).lean();
+    const user = await User.findById(req.session.user._id)
+      .populate("favorites")
+      .lean();
     const recipes = await Recipe.find({ email: user.email }).lean();
     user.recipes = recipes;
     res.render("profile", { title: "Profile", user });
   } catch (err) {
     console.error(err);
-    res.status(500).send("An error occurred");
+    res.status(500).send("ÖNCE GİRİŞ YAPMALISINIZ");
   }
 };
 
@@ -66,5 +68,42 @@ exports.deleteAccount = async (req, res) => {
     res.redirect("/users/register");
   } catch (error) {
     res.status(500).send("An error occurred");
+  }
+};
+
+exports.addFavorite = async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const recipeId = req.params.id;
+
+    // Kullanıcıyı bul ve favorilere ekle
+    const user = await User.findById(userId);
+    if (!user.favorites.includes(recipeId)) {
+      user.favorites.push(recipeId);
+      await user.save();
+      req.flash("success_msg", "Tarif favorilere eklendi.");
+    } else {
+      req.flash("info_msg", "Bu tarif zaten favorilerinizde.");
+    }
+
+    res.redirect("back");
+  } catch (err) {
+    console.error(err);
+    req.flash("error_msg", "Bir hata oluştu. Lütfen tekrar deneyin.");
+    res.redirect("back");
+  }
+};
+
+exports.getFavorites = async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+
+    // Kullanıcının favori tariflerini bulun
+    const user = await User.findById(userId).populate("favorites");
+
+    res.render("favs", { title: "Favori Tarifler", recipes: user.favorites });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Bir hata oluştu");
   }
 };

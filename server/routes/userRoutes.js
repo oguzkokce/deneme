@@ -18,5 +18,12 @@ router.get("/logout", userController.logout);
 router.get("/profile", userController.getProfile);
 router.post("/profile/update", userController.updateProfile);
 router.post("/profile/delete", userController.deleteAccount);
+router.post("/favorite/:id", ensureAuthenticated, userController.addFavorite);
+
+// Favorilere ekleme
+router.post("/favorite/:id", ensureAuthenticated, userController.addFavorite);
+
+// Favori tarifleri listeleme
+router.get("/favs", ensureAuthenticated, userController.getFavorites);
 
 module.exports = router;

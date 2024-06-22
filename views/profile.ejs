@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>Profil</title>
     <link rel="stylesheet" href="/css/profile.css" />
   </head>
   <body>
     <div class="profile-container">
       <h1>Profil Sayfası</h1>
-      <% if (locals.success_msg) { %>
-      <div class="alert alert-success"><%= success_msg %></div>
+      <% if (success_msg) { %>
+      <div class=""><%= success_msg %></div>
       <% } %>
       <form action="/users/profile/update" method="POST">
         <div>
@@ -73,6 +73,9 @@
         </li>
         <% }) %>
       </ul>
+
+      <h2>Favori Tariflerim</h2>
+      <a href="/users/favs" class="btn btn-primary">Favori Tariflerim</a>
     </div>
   </body>
 </html>

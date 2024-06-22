@@ -49,6 +49,20 @@
             </ul>
           </div>
 
+          <!-- Favorilere Ekleme -->
+          <% if (user) { %>
+          <form action="/users/favorite/<%= recipe._id %>" method="POST">
+            <button type="submit" class="btn btn-primary">
+              Favorilere Ekle
+            </button>
+          </form>
+          <% } else { %>
+          <p>
+            Favorilere eklemek için lütfen
+            <a href="/users/login">giriş yapın</a>.
+          </p>
+          <% } %>
+
           <!-- Comments Section -->
           <div class="comment-section">
             <h4>Yorumlar</h4>

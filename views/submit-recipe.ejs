@@ -1,0 +1,123 @@
+<div class="px-4 py-5 my-5 text-center">
+  <h1 class="display-5 fw-bold">Tarifinizi Paylaşın</h1>
+  <div class="col-lg-6 mx-auto">
+    <p class="lead">
+      Harika tariflerinizi dünyanın her yerindeki binlerce kişiyle paylaşın.
+      Başlamak için formumuzu doldurun.
+    </p>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <% if(infoSubmitObj && infoSubmitObj !== '') { %>
+  <div class="col-8 alert alert-success" role="alert"><%= infoSubmitObj %></div>
+  <% } %> <% if(infoErrorsObj && infoErrorsObj.length > 0) { %>
+  <div class="col-8 alert alert-danger" role="alert">
+    <%= infoErrorsObj[0].message %>
+  </div>
+  <% } %>
+
+  <div class="col-8">
+    <form action="/submit-recipe" enctype="multipart/form-data" method="POST">
+      <div class="row g-3">
+        <div class="col-12">
+          <label for="email" class="form-label">E-mail</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="col-12">
+          <label for="name" class="form-label">Tarif Adı</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="col-12">
+          <label for="description" class="form-label">Açıklama</label>
+          <textarea
+            name="description"
+            id="description"
+            class="form-control"
+            rows="4"
+            required
+          ></textarea>
+        </div>
+
+        <div class="col-12">
+          <label for="name" class="form-label">Malzemeler</label><br />
+          <small>Örnek: Su</small>
+          <div class="ingredientList">
+            <div class="ingredientDiv mb-1">
+              <input type="text" name="ingredients" class="form-control" />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            id="addIngredientsBtn"
+          >
+            + Malzeme
+          </button>
+        </div>
+
+        <div class="col-12">
+          <label for="category" class="form-label">Kategori Seçiniz</label>
+          <select class="form-select" name="category" id="category" required>
+            <option value="">Kategori Seçiniz</option>
+            <option value="Yoresel">Yöresel Mutfak</option>
+            <option value="Dunya">Dünya Mutfağı</option>
+            <option value="Tatli">Tatlılar</option>
+            <option value="Vegan">Vegan Yemekler</option>
+            <option value="Diger">Diğer</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label for="image" class="form-label">Görsel Yükleyiniz</label>
+          <input
+            type="file"
+            class="form-control"
+            name="image"
+            id="image"
+            accept="image/*"
+            required
+          />
+        </div>
+
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">
+            Tarifinizi Paylaşın
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let addIngredientsBtn = document.getElementById("addIngredientsBtn");
+    let ingredientList = document.querySelector(".ingredientList");
+    let ingredientDiv = document.querySelector(".ingredientDiv");
+
+    addIngredientsBtn.addEventListener("click", function () {
+      let newIngredient = ingredientDiv.cloneNode(true);
+      let input = newIngredient.querySelector("input");
+      input.value = "";
+      ingredientList.appendChild(newIngredient);
+    });
+  });
+</script>

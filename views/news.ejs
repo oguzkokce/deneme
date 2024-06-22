@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Haberler</h1>
+      <ul class="list-group list-group-flush">
+        <% news.forEach(function(newsItem) { %>
+        <li class="list-group-item">
+          <a href="/news/<%= newsItem._id %>"><%= newsItem.title %></a> - <%=
+          newsItem.author.name %> <% if (locals.user &&
+          locals.user._id.toString() === newsItem.author._id.toString()) { %>
+          <form action="/news/delete" method="POST" style="display: inline">
+            <input type="hidden" name="newsId" value="<%= newsItem._id %>" />
+            <button type="submit" class="btn btn-danger">Sil</button>
+          </form>
+          <% } %>
+        </li>
+        <% }) %>
+      </ul>
+      <h2>Haber Ekle</h2>
+      <form action="/news/add" method="POST">
+        <div class="form-group">
+          <label for="title">Başlık</label>
+          <input
+            type="text"
+            class="form-control"
+            id="title"
+            name="title"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="content">İçerik</label>
+          <textarea
+            class="form-control"
+            id="content"
+            name="content"
+            required
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Ekle</button>
+      </form>
+    </div>
+  </body>
+</html>

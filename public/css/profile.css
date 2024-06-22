@@ -1,0 +1,85 @@
+.profile-container {
+  max-width: 500px;
+  width: 100%;
+  background: #ffffff;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin: 50px auto;
+  font-family: var(
+    --bs-font-sans-serif,
+    "Segoe UI",
+    Tahoma,
+    Geneva,
+    Verdana,
+    sans-serif
+  );
+}
+
+.profile-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.profile-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-container label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.profile-container input[type="text"],
+.profile-container input[type="email"] {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.profile-container button {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.profile-container button:hover {
+  background-color: #0056b3;
+}
+
+.profile-container button.delete {
+  background-color: #dc3545;
+  margin-top: 0;
+}
+
+.profile-container button.delete:hover {
+  background-color: #c82333;
+}
+
+.profile-container .alert {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.profile-container .alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.profile-container .alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}

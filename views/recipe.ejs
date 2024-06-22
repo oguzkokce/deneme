@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <% if (recipe != null) { %>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">
+            <%- recipe.name %>
+          </li>
+        </ol>
+      </nav>
+
+      <div class="row">
+        <div class="col-12 col-md-4">
+          <img
+            src="/uploads/<%- recipe.image %>"
+            class="img-fluid sticky-top"
+            style="top: 20px"
+            alt="<%- recipe.name %>"
+            loading="lazy"
+          />
+        </div>
+
+        <div class="col-12 col-md-8">
+          <div class="recipe-header">
+            <h1><%- recipe.name %></h1>
+            <div class="recipe-category">
+              <i class="bi bi-tag"></i> <%- recipe.category %>
+            </div>
+          </div>
+
+          <div class="recipe-description" style="white-space: pre-line">
+            <h4>Pişirme talimatları</h4>
+            <%- recipe.description %>
+          </div>
+
+          <div class="recipe-ingredients">
+            <h4>Malzemeler</h4>
+            <ul class="list-group list-group-flush">
+              <% recipe.ingredients.forEach(function(ingredient, index) { %>
+              <li class="list-group-item"><%= ingredient %></li>
+              <% }) %>
+            </ul>
+          </div>
+
+          <!-- Comments Section -->
+          <div class="comment-section">
+            <h4>Yorumlar</h4>
+            <ul class="list-group list-group-flush">
+              <% recipe.comments.forEach(function(comment) { %>
+              <li class="list-group-item comment">
+                <p>
+                  <strong><%= comment.userId %>:</strong> <%= comment.content %>
+                </p>
+                <% if (locals.user && locals.user._id.toString() ===
+                comment.userId.toString()) { %>
+                <form action="/comments/update" method="POST">
+                  <input
+                    type="hidden"
+                    name="commentId"
+                    value="<%= comment._id %>"
+                  />
+                  <input
+                    type="hidden"
+                    name="recipeId"
+                    value="<%= recipe._id %>"
+                  />
+                  <textarea name="content" required>
+<%= comment.content %></textarea
+                  >
+                  <button type="submit">Güncelle</button>
+                </form>
+                <form action="/comments/delete" method="POST">
+                  <input
+                    type="hidden"
+                    name="commentId"
+                    value="<%= comment._id %>"
+                  />
+                  <input
+                    type="hidden"
+                    name="recipeId"
+                    value="<%= recipe._id %>"
+                  />
+                  <button type="submit" class="delete">Sil</button>
+                </form>
+                <% } %>
+              </li>
+              <% }) %>
+            </ul>
+
+            <h3>Yorum Ekle</h3>
+            <form action="/comments/add" method="POST">
+              <input type="hidden" name="recipeId" value="<%= recipe._id %>" />
+              <textarea name="content" required></textarea>
+              <button type="submit">Ekle</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <% } else { %>
+      <p>No item found.</p>
+      <% } %>
+    </div>
+  </body>
+</html>

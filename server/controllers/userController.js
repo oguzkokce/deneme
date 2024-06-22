@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../models/user");
 const Recipe = require("../models/Recipe");
 
 exports.login = (req, res) => {

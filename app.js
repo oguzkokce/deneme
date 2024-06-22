@@ -1,4 +1,3 @@
-// app.js içeriği
 require("dotenv").config({ path: "./server/.env" });
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
@@ -8,14 +7,26 @@ const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const mongoose = require("mongoose");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// MongoDB oturum deposu oluşturun
 const store = new MongoDBStore({
   uri: "mongodb+srv://kokceoguz:Okokce57**@cluster0.0scazco.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
   collection: "sessions",
 });
+
+// Hata olaylarını dinleyin
+store.on("error", function (error) {
+  console.log(error);
+});
+
+// MongoDB bağlantısı
+mongoose.connect(
+  "mongodb+srv://kokceoguz:Okokce57**@cluster0.0scazco.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+);
 
 // Middleware
 app.use(methodOverride("_method"));
@@ -28,7 +39,8 @@ app.use(
   session({
     secret: "CookingBlogSecretSession",
     saveUninitialized: true,
-    resave: true,
+    resave: false,
+    store: store,
   })
 );
 app.use(flash());

@@ -167,41 +167,33 @@ exports.submitRecipeOnPost = async (req, res) => {
       if (err) {
         console.error("File upload error:", err);
         req.flash("infoErrors", "File upload error.");
-        if (!res.headersSent) {
-          return res.status(500).send("Error uploading file.");
-        }
+        return res.redirect("/submit-recipe");
       }
 
       try {
         const newRecipe = new Recipe({
           name: req.body.name,
           description: req.body.description,
-          email: req.body.email,
           ingredients: req.body.ingredients,
           category: req.body.category,
           image: newImageName,
+          user: req.session.user._id, // Kullanıcı ID'sini ekleyin
         });
 
         await newRecipe.save();
 
         req.flash("infoSubmit", "Recipe has been added.");
-        if (!res.headersSent) {
-          return res.redirect("/submit-recipe");
-        }
+        res.redirect("/submit-recipe");
       } catch (error) {
         console.error("Error saving recipe:", error);
-        req.flash("infoErrors", error);
-        if (!res.headersSent) {
-          return res.redirect("/submit-recipe");
-        }
+        req.flash("infoErrors", error.message);
+        res.redirect("/submit-recipe");
       }
     });
   } catch (error) {
     console.error("Error in submitRecipeOnPost:", error);
-    req.flash("infoErrors", error);
-    if (!res.headersSent) {
-      res.redirect("/submit-recipe");
-    }
+    req.flash("infoErrors", error.message);
+    res.redirect("/submit-recipe");
   }
 };
 
@@ -284,10 +276,17 @@ exports.getRecipeAverageRating = async (req, res) => {
 
 exports.getMyRecipes = async (req, res) => {
   try {
-    const recipes = await Recipe.find({ email: req.session.user.email }).lean();
-    res.render("my-recipes", { title: "Tariflerim", recipes });
+    const userId = req.session.user._id; // Kullanıcı ID'sini oturumdan alın
+    const recipes = await Recipe.find({ user: userId }).lean(); // Kullanıcıya ait tarifleri getirin
+    res.render("my-recipes", {
+      title: "Tariflerim",
+      recipes: recipes,
+      success_msg: req.flash("success_msg"),
+      error_msg: req.flash("error_msg"),
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Bir hata oluştu");
+    req.flash("error_msg", "Bir hata oluştu. Lütfen tekrar deneyin.");
+    res.redirect("/");
   }
 };

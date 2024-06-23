@@ -8,9 +8,9 @@
     <div class="container">
       <h1>Tariflerim</h1>
       <% if (success_msg) { %>
-      <div class=""><%= success_msg %></div>
+      <div class="alert alert-success"><%= success_msg %></div>
       <% } %> <% if (error_msg) { %>
-      <div class=""><%= error_msg %></div>
+      <div class="alert alert-danger"><%= error_msg %></div>
       <% } %>
       <ul>
         <% recipes.forEach(function(recipe) { %>
@@ -28,7 +28,7 @@
               required
             />
             <textarea name="ingredients" required>
-<%= recipe.ingredients %></textarea
+<%= recipe.ingredients.join(', ') %></textarea
             >
             <textarea name="description" required>
 <%= recipe.description %></textarea

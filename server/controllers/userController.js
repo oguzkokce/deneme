@@ -1,34 +1,64 @@
 const User = require("../models/user");
 const Recipe = require("../models/Recipe");
+const bcrypt = require("bcrypt"); // bcrypt modülünü içe aktarın
 
-exports.login = (req, res) => {
-  const { email, password } = req.body;
-  User.findOne({ email, password }, (err, user) => {
-    if (err || !user) {
-      req.flash("error", "Invalid email or password");
-      return res.redirect("/users/login");
-    }
-    req.session.user = user;
-    res.redirect("/");
-  });
-};
+exports.register = async (req, res) => {
+  try {
+    const { username, name, email, password } = req.body;
 
-exports.register = (req, res) => {
-  const { username, email, password } = req.body;
-  const newUser = new User({ username, email, password });
-  newUser.save((err) => {
-    if (err) {
-      req.flash("error", "Failed to register");
+    // Kullanıcı olup olmadığını kontrol et
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      req.flash("error_msg", "User already exists");
       return res.redirect("/users/register");
     }
-    req.session.user = newUser;
-    res.redirect("/");
-  });
+
+    // Şifreyi hashleme
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Yeni kullanıcı oluştur
+    const newUser = new User({
+      username,
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+
+    req.flash("success_msg", "You are now registered and can log in");
+    res.redirect("/users/login");
+  } catch (error) {
+    console.error("Registration error:", error);
+    req.flash("error_msg", "An error occurred during registration");
+    res.redirect("/users/register");
+  }
 };
 
-exports.logout = (req, res) => {
-  req.session.destroy();
-  res.redirect("/");
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      req.flash("error_msg", "User not found");
+      return res.redirect("/users/login");
+    }
+
+    // Şifre doğrulama
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      req.flash("error_msg", "Incorrect password");
+      return res.redirect("/users/login");
+    }
+
+    req.session.user = user;
+    res.redirect("/");
+  } catch (error) {
+    console.error("Login error:", error);
+    req.flash("error_msg", "An error occurred during login");
+    res.redirect("/users/login");
+  }
 };
 
 exports.getProfile = async (req, res) => {
@@ -76,7 +106,6 @@ exports.addFavorite = async (req, res) => {
     const userId = req.session.user._id;
     const recipeId = req.params.id;
 
-    // Kullanıcıyı bul ve favorilere ekle
     const user = await User.findById(userId);
     if (!user.favorites.includes(recipeId)) {
       user.favorites.push(recipeId);
@@ -97,8 +126,6 @@ exports.addFavorite = async (req, res) => {
 exports.getFavorites = async (req, res) => {
   try {
     const userId = req.session.user._id;
-
-    // Kullanıcının favori tariflerini bulun
     const user = await User.findById(userId).populate("favorites");
 
     res.render("favs", { title: "Favori Tarifler", recipes: user.favorites });
@@ -106,4 +133,9 @@ exports.getFavorites = async (req, res) => {
     console.error(err);
     res.status(500).send("Bir hata oluştu");
   }
+};
+
+exports.logout = (req, res) => {
+  req.session.destroy();
+  res.redirect("/users/login");
 };

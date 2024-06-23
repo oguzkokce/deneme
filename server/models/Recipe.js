@@ -22,6 +22,11 @@ const recipeSchema = new mongoose.Schema({
     type: String,
     required: "This field is required.",
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,

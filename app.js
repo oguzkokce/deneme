@@ -8,6 +8,7 @@ const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -45,6 +46,7 @@ app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(expressLayouts);
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser("CookingBlogSecure"));
 app.use(
@@ -80,4 +82,6 @@ app.use("/users", userRoutes);
 app.use("/comments", commentRoutes);
 app.use("/news", newsRoutes); // Haber rotalarını kullanıma alın
 
-app.listen(port, () => console.log(`Listening to port ${port}`));
+app.listen(process.env.PORT || 3000, () => {
+  console.log("Server Başlatıldı");
+});

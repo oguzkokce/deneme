@@ -1,77 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   </head>
   <body>
-    <div class="container">
+    <div class="container mt-4">
       <% if (recipe != null) { %>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
           <li class="breadcrumb-item active" aria-current="page">
-            <%- recipe.name %>
+            <%= recipe.name %>
           </li>
         </ol>
       </nav>
 
       <div class="row">
-        <div class="col-12 col-md-4">
+        <div class="col-md-4">
           <img
-            src="/uploads/<%- recipe.image %>"
-            class="img-fluid sticky-top"
-            style="top: 20px"
-            alt="<%- recipe.name %>"
+            src="/uploads/<%= recipe.image %>"
+            class="img-fluid mb-3"
+            alt="<%= recipe.name %>"
             loading="lazy"
           />
         </div>
 
-        <div class="col-12 col-md-8">
-          <div class="recipe-header">
-            <h1><%- recipe.name %></h1>
-            <div class="recipe-category">
-              <i class="bi bi-tag"></i> <%- recipe.category %>
+        <div class="col-md-8">
+          <div class="recipe-header mb-3">
+            <h1 class="display-4"><%= recipe.name %></h1>
+            <div class="text-muted mb-3">
+              <i class="bi bi-tag"></i> <%= recipe.category %>
             </div>
           </div>
 
-          <div class="recipe-description" style="white-space: pre-line">
-            <h4>Pişirme talimatları</h4>
-            <%- recipe.description %>
+          <div class="recipe-description mb-4" style="white-space: pre-line">
+            <h4>Pişirme Talimatları</h4>
+            <p><%= recipe.description %></p>
           </div>
 
-          <div class="recipe-ingredients">
+          <div class="recipe-ingredients mb-4">
             <h4>Malzemeler</h4>
             <ul class="list-group list-group-flush">
-              <% recipe.ingredients.forEach(function(ingredient, index) { %>
+              <% recipe.ingredients.forEach(function(ingredient) { %>
               <li class="list-group-item"><%= ingredient %></li>
               <% }) %>
             </ul>
           </div>
-          <!-- Puanlama -->
+
           <% if (user) { %>
-          <form action="/rate/<%= recipe._id %>" method="POST">
-            <label for="rating">Puan Ver:</label>
-            <select name="rating" id="rating" required>
-              <option value="">Seçiniz</option>
+          <form action="/rate/<%= recipe._id %>" method="POST" class="mb-4">
+            <label for="rating" class="form-label">Puan Ver:</label>
+            <select name="rating" id="rating" class="form-select mb-2" required>
+              <option value="" selected disabled>Seçiniz</option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
               <option value="4">4</option>
               <option value="5">5</option>
             </select>
-            <button type="submit" class="btn btn-primary">Puanla</button>
+            <button type="submit" class="btn btn-primary w-100">Puanla</button>
           </form>
           <% } else { %>
-          <p>
-            Puan vermek için lütfen
-            <a href="/users/login">giriş yapın</a>.
-          </p>
+          <p>Puan vermek için lütfen <a href="/users/login">giriş yapın</a>.</p>
           <% } %>
 
-          <div id="averageRating">Ortalama Puan: Yükleniyor...</div>
-
+          <div id="averageRating" class="mb-4">
+            Ortalama Puan: Yükleniyor...
+          </div>
           <script>
             $(document).ready(function () {
               $.ajax({
@@ -89,10 +92,14 @@
               });
             });
           </script>
-          <!-- Favorilere Ekleme -->
+
           <% if (user) { %>
-          <form action="/users/favorite/<%= recipe._id %>" method="POST">
-            <button type="submit" class="btn btn-primary">
+          <form
+            action="/users/favorite/<%= recipe._id %>"
+            method="POST"
+            class="mb-4"
+          >
+            <button type="submit" class="btn btn-outline-primary w-100">
               Favorilere Ekle
             </button>
           </form>
@@ -103,18 +110,16 @@
           </p>
           <% } %>
 
-          <!-- Comments Section -->
           <div class="comment-section">
             <h4>Yorumlar</h4>
-            <ul class="list-group list-group-flush">
+            <ul class="list-group list-group-flush mb-4">
               <% recipe.comments.forEach(function(comment) { %>
-              <li class="list-group-item comment">
-                <p>
-                  <strong><%= comment.userId %>:</strong> <%= comment.content %>
-                </p>
+              <li class="list-group-item">
+                <strong><%= comment.userId %>:</strong>
+                <p><%= comment.content %></p>
                 <% if (locals.user && locals.user._id.toString() ===
                 comment.userId.toString()) { %>
-                <form action="/comments/update" method="POST">
+                <form action="/comments/update" method="POST" class="mb-2">
                   <input
                     type="hidden"
                     name="commentId"
@@ -125,10 +130,12 @@
                     name="recipeId"
                     value="<%= recipe._id %>"
                   />
-                  <textarea name="content" required>
+                  <textarea name="content" class="form-control mb-2">
 <%= comment.content %></textarea
                   >
-                  <button type="submit">Güncelle</button>
+                  <button type="submit" class="btn btn-secondary btn-sm">
+                    Güncelle
+                  </button>
                 </form>
                 <form action="/comments/delete" method="POST">
                   <input
@@ -141,18 +148,24 @@
                     name="recipeId"
                     value="<%= recipe._id %>"
                   />
-                  <button type="submit" class="delete">Sil</button>
+                  <button type="submit" class="btn btn-danger btn-sm">
+                    Sil
+                  </button>
                 </form>
                 <% } %>
               </li>
               <% }) %>
             </ul>
 
-            <h3>Yorum Ekle</h3>
+            <h4>Yorum Ekle</h4>
             <form action="/comments/add" method="POST">
               <input type="hidden" name="recipeId" value="<%= recipe._id %>" />
-              <textarea name="content" required></textarea>
-              <button type="submit">Ekle</button>
+              <textarea
+                name="content"
+                class="form-control mb-2"
+                required
+              ></textarea>
+              <button type="submit" class="btn btn-primary">Ekle</button>
             </form>
           </div>
         </div>

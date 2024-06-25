@@ -76,3 +76,63 @@ a {
 header .btn {
   margin-left: 10px; /* Butonların arama formuna yakın olmasını sağlar */
 }
+body {
+  font-family: "Rubik", sans-serif;
+  background-color: rgb(243, 243, 243);
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+h1.display-4 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb {
+  background-color: transparent;
+}
+
+.breadcrumb-item a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+.recipe-header {
+  margin-bottom: 1rem;
+}
+
+.recipe-description,
+.recipe-ingredients {
+  margin-bottom: 2rem;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.form-select {
+  margin-bottom: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.25rem;
+}
+
+.comment-section h4 {
+  margin-top: 2rem;
+}
+
+.comment-section ul {
+  margin-bottom: 2rem;
+}
+
+.comment-section textarea {
+  resize: vertical;
+}

@@ -9,6 +9,7 @@ const methodOverride = require("method-override");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const Recipe = require("./server/models/Recipe");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -81,6 +82,19 @@ app.use("/", routes);
 app.use("/users", userRoutes);
 app.use("/comments", commentRoutes);
 app.use("/news", newsRoutes); // Haber rotalarını kullanıma alın
+
+app.get("/search", async (req, res) => {
+  try {
+    const searchQuery = req.query.searchQuery;
+    const recipes = await Recipe.find({
+      name: { $regex: searchQuery, $options: "i" },
+    });
+    res.render("search", { recipes: recipes, title: "Arama Sonuçları" });
+  } catch (error) {
+    console.error("Arama sırasında bir hata oluştu: ", error);
+    res.render("search", { recipes: [], title: "Arama Sonuçları" });
+  }
+});
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server Başlatıldı");

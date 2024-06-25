@@ -10,7 +10,7 @@
 
 <div class="row justify-content-center">
   <% if(infoSubmitObj && infoSubmitObj !== '') { %>
-  <div class="" role=""><%= infoSubmitObj %></div>
+  <div class="alert alert-success" role="alert"><%= infoSubmitObj %></div>
   <% } %> <% if(infoErrorsObj && infoErrorsObj.length > 0) { %>
   <div class="" role=""><%= infoErrorsObj[0].message %></div>
   <% } %>

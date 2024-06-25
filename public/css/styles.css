@@ -136,3 +136,32 @@ h1.display-4 {
 .comment-section textarea {
   resize: vertical;
 }
+
+.navbar-nav {
+  flex-direction: row;
+}
+
+.nav-item {
+  margin-right: 10px;
+}
+
+.form-inline {
+  flex-wrap: nowrap;
+}
+
+@media (max-width: 767px) {
+  .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+  }
+  .form-inline {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .form-inline .form-control {
+    width: calc(100% - 60px); /* Adjust input width */
+  }
+  .form-inline .btn {
+    width: 50px;
+  }
+}
